@@ -15,7 +15,7 @@ export default function App() {
   const [option, setEchartsOption] = useState({})
 
   const [lines, setLines] = useState([])
-
+  const [historybusdata, sethistorybusdata] = useState([])
   const bus_plate_hash = {
     "298": { "plate": "粤BDF298", 'route': '2' },
     "363": { "plate": "粤BDF363", 'route': '2' },
@@ -45,7 +45,7 @@ export default function App() {
       },
       title: [{
         text: '南科大校巴实时位置(by小旭学长)',
-        subtext: '测试中，5秒更新一次位置'
+        subtext: '测试中'
       }],
       grid: [{
         top: '11%',
@@ -83,13 +83,12 @@ export default function App() {
         }
 
       }],
-
       series: [{
         type: 'scatter',
         label: {
           fontSize: 10,
           show: true,
-          color:'#999',
+          color: '#999',
           position: 'right',
           formatter: '{b}'
         },
@@ -195,23 +194,26 @@ export default function App() {
             return {
               value: [route_dir, p_nearest_loc * 1000],
               name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
-              symbol:'image://https://bus.sustcra.com/bus-top-view.png',
-              symbolSize:30,
-              symbolRotate:180
+              symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
+              symbolSize: 30,
+              symbolRotate: 180,
+              speed: f.speed
             }
           } else if (((f.course - bearing) < -135) || ((f.course - bearing) > 135)) {
             route_dir = 0
             return {
               value: [route_dir, turf.length(thisline) * 1000 - p_nearest_loc * 1000],
               name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
-              symbol:'image://https://bus.sustcra.com/bus-top-view.png',
-              symbolSize:30,
-              symbolRotate:180
+              symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
+              symbolSize: 30,
+              symbolRotate: 180,
+              speed: f.speed
             }
           }
-          console.log()
+
         }
         )
+        sethistorybusdata(busdata)
         setEchartsOption({
           series: [{}, {}, { data: busdata }]
         })
@@ -223,9 +225,25 @@ export default function App() {
     updatebuspos()
   }, [lines])
 
+  const [times, settimes] = useState(0)
   useInterval(() => {
-    updatebuspos()
-  }, 5000, { immediate: true });
+    settimes(times + 1)
+    if (times % 10 == 0) {
+      updatebuspos()
+    } else {
+
+      const newdata = historybusdata.map(f => {
+        if (typeof (f) != 'undefined') {
+          return { ...f, value: [f.value[0], f.value[1] + f.speed * 1000 / 7200] }
+        }
+      })
+      sethistorybusdata(newdata)
+      setEchartsOption({
+        series: [{}, {}, { data: newdata }]
+      })
+
+    }
+  }, 500, { immediate: true });
 
   return (
     <div className='container'>
