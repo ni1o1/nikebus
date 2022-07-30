@@ -1,0 +1,54 @@
+{
+    "name": "todolist",
+    "homepage": ".",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@testing-library/jest-dom": "^5.16.1",
+        "@testing-library/react": "^12.1.2",
+        "@testing-library/user-event": "^13.5.0",
+        "@turf/turf": "^6.5.0",
+        "ahooks": "^3.6.2",
+        "axios": "^0.27.2",
+        "echarts": "^5.3.3",
+        "echarts-for-react": "^3.0.2",
+        "nanoid": "^3.1.32",
+        "pubsub-js": "^1.9.4",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-router-dom": "^6.2.1",
+        "react-scripts": "5.0.0",
+        "turf": "^3.0.14",
+        "web-vitals": "^2.1.3"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build && rm -rf docs && mv build docs",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "resolutions": {
+        "mini-css-extract-plugin": "2.4.5"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "mini-css-extract-plugin": "2.4.5"
+    }
+}
