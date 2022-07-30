@@ -17,25 +17,25 @@ export default function App() {
   const [lines, setLines] = useState([])
   const [historybusdata, sethistorybusdata] = useState([])
   const bus_plate_hash = {
-    "298": { "plate": "粤BDF298", 'route': '2' },
-    "363": { "plate": "粤BDF363", 'route': '2' },
-    "8040": { "plate": "粤BDF040", 'route': '2' },
-    "8147": { "plate": "粤BDF147", 'route': '2' },
-    "8267": { "plate": "粤BDF267", 'route': '2' },
-    "8330": { "plate": "粤BDF330", 'route': '1' },
-    "8335": { "plate": "粤BDF335", 'route': '2' },
-    "8338": { "plate": "粤BDF338", 'route': '2' },
-    "8345": { "plate": "粤BDF345", 'route': '2' },
-    "8365": { "plate": "粤BDF365", 'route': '2' },
-    "8371": { "plate": "粤BDF371", 'route': '1' },
-    "8411": { "plate": "粤BDF411", 'route': '1' },
-    "8421": { "plate": "粤BDF421", 'route': '1' },
-    "8430": { "plate": "粤BDF430", 'route': '2' },
-    "8447": { "plate": "粤BDF447", 'route': '2' },
-    "8458": { "plate": "粤BDF458", 'route': '2' },
-    "8470": { "plate": "粤BDF470", 'route': '1' },
-    "8471": { "plate": "粤BDF471", 'route': '2' },
-    "18447": { "plate": "粤BDF447", 'route': '1' }
+    "298": { "plate": "粤BDF298" },
+    "363": { "plate": "粤BDF363" },
+    "8040": { "plate": "粤BDF040" },
+    "8147": { "plate": "粤BDF147" },
+    "8267": { "plate": "粤BDF267" },
+    "8330": { "plate": "粤BDF330" },
+    "8335": { "plate": "粤BDF335" },
+    "8338": { "plate": "粤BDF338" },
+    "8345": { "plate": "粤BDF345" },
+    "8365": { "plate": "粤BDF365" },
+    "8371": { "plate": "粤BDF371" },
+    "8411": { "plate": "粤BDF411" },
+    "8421": { "plate": "粤BDF421" },
+    "8430": { "plate": "粤BDF430" },
+    "8447": { "plate": "粤BDF447" },
+    "8458": { "plate": "粤BDF458" },
+    "8470": { "plate": "粤BDF470" },
+    "8471": { "plate": "粤BDF471" },
+    "18447": { "plate": "粤BDF447" }
   }
 
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function App() {
   }, [])
 
 
-
+  //加载线路与站点信息
   useEffect(() => {
     axios.get('data/line1.json').then(responseline1 => {
       axios.get('data/line2.json').then(responseline2 => {
@@ -170,6 +170,8 @@ export default function App() {
     })
 
   }, [])
+
+  //更新车辆位置
   function updatebuspos() {
     if (lines.length > 0) {
       axios.get('https://bus.sustcra.com/api/v2/monitor_osm/').then(response => {
@@ -178,16 +180,17 @@ export default function App() {
           //判断是在哪个方向上
           const mcp = turf.point([f.lng, f.lat])
           const thisline = lines[0]['features'][0]
-          //线上的最近点
+          //线上最近点
           const p_nearest = turf.nearestPointOnLine(thisline, mcp)
           const p_nearest_loc = p_nearest.properties.location
-          //线上最近点下一个点
+          //线上最近点+1米处的点
           const p_next = turf.along(thisline, p_nearest_loc + 0.0001);
+          //计算切线角度
           let bearing = turf.rhumbBearing(p_nearest, p_next);
           if (bearing < 0) {
             bearing += 360
           }
-          //通过方向角判断车辆行进方向
+          //通过车辆方向角判断车辆行进方向
           let route_dir = 2
           if (((f.course - bearing) < 45) && ((f.course - bearing) > -45)) {
             route_dir = 1
@@ -209,6 +212,9 @@ export default function App() {
               symbolRotate: 180,
               speed: f.speed
             }
+          } else {
+            //从历史信息里找到这辆车的信息
+            return historybusdata.filter(p => p.name == bus_plate_hash[f.id].plate)[0]
           }
 
         }
@@ -228,10 +234,11 @@ export default function App() {
   const [times, settimes] = useState(0)
   useInterval(() => {
     settimes(times + 1)
+    //5秒校准一次正确位置
     if (times % 10 == 0) {
       updatebuspos()
     } else {
-
+      //0.5秒通过速度推测一次车辆的位置
       const newdata = historybusdata.map(f => {
         if (typeof (f) != 'undefined') {
           return { ...f, value: [f.value[0], f.value[1] + f.speed * 1000 / 7200] }
@@ -241,7 +248,6 @@ export default function App() {
       setEchartsOption({
         series: [{}, {}, { data: newdata }]
       })
-
     }
   }, 500, { immediate: true });
 
