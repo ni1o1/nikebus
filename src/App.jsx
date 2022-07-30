@@ -44,8 +44,8 @@ export default function App() {
         show: false,
       },
       title:[{
-        text:'南科大校巴实时位置',
-        subtext:'by 小旭学长'
+        text:'南科大校巴实时位置(by小旭学长)',
+        subtext:'测试中，5秒更新一次位置'
       }],
       grid: [{
         top: '11%',
