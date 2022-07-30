@@ -43,9 +43,9 @@ export default function App() {
       tooltip: {
         show: false,
       },
-      title:[{
-        text:'南科大校巴实时位置(by小旭学长)',
-        subtext:'测试中，5秒更新一次位置'
+      title: [{
+        text: '南科大校巴实时位置(by小旭学长)',
+        subtext: '测试中，5秒更新一次位置'
       }],
       grid: [{
         top: '11%',
@@ -89,6 +89,7 @@ export default function App() {
         label: {
           fontSize: 10,
           show: true,
+          color:'#999',
           position: 'right',
           formatter: '{b}'
         },
@@ -100,8 +101,9 @@ export default function App() {
         ]
       }, {
         label: {
-          fontSize: 10,
+          fontSize: 11,
           show: true,
+
           position: 'right',
           formatter: '{b}'
         },
@@ -127,7 +129,6 @@ export default function App() {
             const stop1data = responsestop1.data
             const stop2data = responsestop2.data
             setLines([line1data, line2data])
-
             const line1dir1 = stop1data.features.map(f => {
               return {
                 value: [1, turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
@@ -174,22 +175,15 @@ export default function App() {
     if (lines.length > 0) {
       axios.get('https://bus.sustcra.com/api/v2/monitor_osm/').then(response => {
         const res = response.data
-
-        console.log(res)
-
         const busdata = res.filter(f => f.time_rt - f.time_mt < 300).map(f => {
-
           //判断是在哪个方向上
           const mcp = turf.point([f.lng, f.lat])
           const thisline = lines[0]['features'][0]
-
           //线上的最近点
           const p_nearest = turf.nearestPointOnLine(thisline, mcp)
           const p_nearest_loc = p_nearest.properties.location
-
           //线上最近点下一个点
           const p_next = turf.along(thisline, p_nearest_loc + 0.0001);
-
           let bearing = turf.rhumbBearing(p_nearest, p_next);
           if (bearing < 0) {
             bearing += 360
@@ -200,24 +194,27 @@ export default function App() {
             route_dir = 1
             return {
               value: [route_dir, p_nearest_loc * 1000],
-              name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' }
+              name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
+              symbol:'image://https://bus.sustcra.com/bus-top-view.png',
+              symbolSize:30,
+              symbolRotate:180
             }
-          }else if (((f.course - bearing) < -135) || ((f.course - bearing) > 135)) {
+          } else if (((f.course - bearing) < -135) || ((f.course - bearing) > 135)) {
             route_dir = 0
             return {
               value: [route_dir, turf.length(thisline) * 1000 - p_nearest_loc * 1000],
-              name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' }
+              name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
+              symbol:'image://https://bus.sustcra.com/bus-top-view.png',
+              symbolSize:30,
+              symbolRotate:180
             }
           }
           console.log()
         }
         )
-
         setEchartsOption({
           series: [{}, {}, { data: busdata }]
         })
-
-
       })
     }
   }
