@@ -52,7 +52,7 @@ export default function App() {
         top: '13%',
         bottom: '0%',
         left: '2%',
-        right: '6%',
+        right: '4%',
       }],
       yAxis: [{
         inverse: true,
@@ -305,24 +305,24 @@ export default function App() {
           if (parseInt(nearest_line1.properties.distanceToPoint * 1000) > 0) {
             data1 = [
               {
-                name: '离您最近'+bustext_1,
+                name: '最近'+bustext_1,
                 itemStyle: { color: '#ff881b' },
                 coord: [1, line1_pos_dir1]
               },
               {
-                name: '离您最近'+bustext_0,
+                name: '最近'+bustext_0,
                 itemStyle: { color: '#ff881b' },
                 coord: [0, line1_pos_dir2]
               }]
           }
           if (parseInt(nearest_line2.properties.distanceToPoint * 1000) > 0) {
             data2 = [{
-              name: '离您最近'+bustext_3,
+              name: '最近'+bustext_3,
               itemStyle: { color: '#379ff4' },
               coord: [3, line2_pos_dir1]
             },
             {
-              name: '离您最近'+bustext_2,
+              name: '最近'+bustext_2,
               itemStyle: { color: '#379ff4' },
               coord: [2, line2_pos_dir2]
             }
