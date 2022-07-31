@@ -16,6 +16,9 @@ export default function App() {
   const [stops2, setStops2] = useState([])
   const [historybusdata, sethistorybusdata] = useState([])
   const bus_plate_hash = {
+    "8371": { "plate": "粤BDF371", 'route': 1 },//确定
+    "8421": { "plate": "粤BDF421", 'route': 1 },//确定
+    "8471": { "plate": "粤BDF471", 'route': 1 },//确定
     "298": { "plate": "粤BDF298" },
     "363": { "plate": "粤BDF363" },
     "8040": { "plate": "粤BDF040" },
@@ -26,14 +29,11 @@ export default function App() {
     "8338": { "plate": "粤BDF338" },
     "8345": { "plate": "粤BDF345" },
     "8365": { "plate": "粤BDF365" },
-    "8371": { "plate": "粤BDF371" },
     "8411": { "plate": "粤BDF411" },
-    "8421": { "plate": "粤BDF421", 'route': 1 },
     "8430": { "plate": "粤BDF430" },
     "8447": { "plate": "粤BDF447" },
     "8458": { "plate": "粤BDF458" },
     "8470": { "plate": "粤BDF470" },
-    "8471": { "plate": "粤BDF471", 'route': 1 },
     "18447": { "plate": "粤BDF447" }
   }
 
@@ -44,11 +44,11 @@ export default function App() {
         show: false,
       },
       title: [{
-        text: '南科大校巴实时位置(测试中)',
+        text: '南科大校巴实时位置',
         subtext: 'bilibili@交通数据小旭学长'
       }],
       grid: [{
-        top: '11%',
+        top: '13%',
         bottom: '0%',
         left: '2%',
         right: '6%',
@@ -105,6 +105,7 @@ export default function App() {
           show: true,
           fontWeight:'bold',
           position: 'right',
+          distance:-5,
           formatter: '{b}'
         },
         type: 'scatter',
@@ -135,25 +136,33 @@ export default function App() {
             const line1dir1 = stop1data.features.map(f => {
               return {
                 value: [1, turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
-                name: f.properties.name, itemStyle: { color: '#ff881b' }
+                name: f.properties.name, 
+                symbolSize:12,
+                itemStyle: { color: '#ff881b' }
               }
             })
             const line1dir2 = stop1data.features.map(f => {
               return {
                 value: [0, turf.length(line1data['features'][0]) * 1000 - turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
-                name: f.properties.name, itemStyle: { color: '#ff881b' }
+                name: f.properties.name, 
+                symbolSize:12,
+                itemStyle: { color: '#ff881b' }
               }
             })
             const line2dir1 = stop2data.features.map(f => {
               return {
                 value: [3, turf.nearestPointOnLine(line2data['features'][0], f).properties.location * 1000],
-                name: f.properties.name, itemStyle: { color: '#379ff4' }
+                name: f.properties.name, 
+                symbolSize:12,
+                itemStyle: { color: '#379ff4' }
               }
             })
             const line2dir2 = stop2data.features.map(f => {
               return {
                 value: [2, turf.length(line2data['features'][0]) * 1000 - turf.nearestPointOnLine(line2data['features'][0], f).properties.location * 1000],
-                name: f.properties.name, itemStyle: { color: '#379ff4' }
+                name: f.properties.name,
+                symbolSize:12,
+                itemStyle: { color: '#379ff4' }
               }
             })
             setEchartsOption({
@@ -180,9 +189,15 @@ export default function App() {
       axios.get('https://bus.sustcra.com/api/v2/monitor_osm/').then(response => {
         const res = response.data
         const busdata = res.filter(f => f.time_rt - f.time_mt < 300).map(f => {
+
+          //哪条线路
+          let thisroute = 0
+          if (bus_plate_hash[f.id].route==2){
+            thisroute = 1
+          }
           //判断是在哪个方向上
           const mcp = turf.point([f.lng, f.lat])
-          const thisline = lines[0]['features'][0]
+          const thisline = lines[thisroute]['features'][0]
           //线上最近点
           const p_nearest = turf.nearestPointOnLine(thisline, mcp)
           const p_nearest_loc = p_nearest.properties.location
@@ -198,7 +213,7 @@ export default function App() {
           if (((f.course - bearing) < 30) && ((f.course - bearing) > -30)) {
             route_dir = 1
             return {
-              value: [route_dir, p_nearest_loc * 1000],
+              value: [route_dir+thisroute*2, p_nearest_loc * 1000],
               name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
               symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
               symbolSize: 30,
@@ -208,7 +223,7 @@ export default function App() {
           } else if (((f.course - bearing) < -150) || ((f.course - bearing) > 150)) {
             route_dir = 0
             return {
-              value: [route_dir, turf.length(thisline) * 1000 - p_nearest_loc * 1000],
+              value: [route_dir+thisroute*2, turf.length(thisline) * 1000 - p_nearest_loc * 1000],
               name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
               symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
               symbolSize: 30,
