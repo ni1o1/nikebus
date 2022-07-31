@@ -51,7 +51,7 @@ export default function App() {
       grid: [{
         top: '13%',
         bottom: '0%',
-        left: '3%',
+        left: '4%',
         right: '4%',
       }],
       yAxis: [{
@@ -360,7 +360,7 @@ export default function App() {
       <ReactECharts
         option={option}
         ref={mycharts}
-        style={{ height: '744px', width: '375px' }}
+        style={{ height: '744px', width: '100%' }}
       />
       <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
         target="_blank"
