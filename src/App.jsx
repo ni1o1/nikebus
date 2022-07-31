@@ -259,7 +259,6 @@ export default function App() {
         ref={mycharts}
         style={{ height: '844px', width: '375px' }}
       />
-      <img src="https://visitor-badge.glitch.me/badge?page_id=nikebus" alt="visitor badge"/>
     </div >
   )
 }
