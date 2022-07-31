@@ -10,7 +10,6 @@
 ## 用什么做的？
 
 编程语言JavaScript  
-主要用到的有下面这些包:  
 
 - 前端框架：[React.js](http://reactjs.org)
 - 图表绘制：[ECharts](https://echarts.apache.org/)
