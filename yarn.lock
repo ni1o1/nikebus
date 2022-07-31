@@ -8282,6 +8282,11 @@ react-error-overlay@^6.0.10:
   resolved "https://registry.npmmirror.com/react-error-overlay/download/react-error-overlay-6.0.10.tgz"
   integrity sha512-mKR90fX7Pm5seCOfz8q9F+66VCc1PGsWSBxKbITjfKVQHMNF2zudxHnMdJiB1fRCb+XsbQV9sO9DCkgsMQgBIA==
 
+react-github-fork-ribbon@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.npmmirror.com/react-github-fork-ribbon/-/react-github-fork-ribbon-0.7.1.tgz#64a4a9e83bea8e7abac38cfc28015c1b34adef35"
+  integrity sha512-buxFTLteR83jHGDiJfukS5AevEzGszHpjXyPAMn3+saHeOJa3FAAHdlQuWVjyVLPejs2aNqHTNRGkHXwO/1A4A==
+
 react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.npmmirror.com/react-is/download/react-is-16.13.1.tgz"

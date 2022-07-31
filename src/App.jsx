@@ -4,6 +4,7 @@ import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
 import * as turf from '@turf/turf'
 import { useInterval } from 'ahooks';
+import GitHubForkRibbon from 'react-github-fork-ribbon';
 import './App.css';
 
 
@@ -103,9 +104,9 @@ export default function App() {
         label: {
           fontSize: 11,
           show: true,
-          fontWeight:'bold',
+          fontWeight: 'bold',
           position: 'right',
-          distance:-5,
+          distance: -5,
           formatter: '{b}'
         },
         type: 'scatter',
@@ -136,33 +137,33 @@ export default function App() {
             const line1dir1 = stop1data.features.map(f => {
               return {
                 value: [1, turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
-                name: f.properties.name, 
-                symbolSize:8,
-                itemStyle: { color: '#ff881b',opacity: 1 }
+                name: f.properties.name,
+                symbolSize: 8,
+                itemStyle: { color: '#ff881b', opacity: 1 }
               }
             })
             const line1dir2 = stop1data.features.map(f => {
               return {
                 value: [0, turf.length(line1data['features'][0]) * 1000 - turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
-                name: f.properties.name, 
-                symbolSize:8,
-                itemStyle: { color: '#ff881b' ,opacity: 1}
+                name: f.properties.name,
+                symbolSize: 8,
+                itemStyle: { color: '#ff881b', opacity: 1 }
               }
             })
             const line2dir1 = stop2data.features.map(f => {
               return {
                 value: [3, turf.nearestPointOnLine(line2data['features'][0], f).properties.location * 1000],
-                name: f.properties.name, 
-                symbolSize:8,
-                itemStyle: { color: '#379ff4' ,opacity: 1}
+                name: f.properties.name,
+                symbolSize: 8,
+                itemStyle: { color: '#379ff4', opacity: 1 }
               }
             })
             const line2dir2 = stop2data.features.map(f => {
               return {
                 value: [2, turf.length(line2data['features'][0]) * 1000 - turf.nearestPointOnLine(line2data['features'][0], f).properties.location * 1000],
                 name: f.properties.name,
-                symbolSize:8,
-                itemStyle: { color: '#379ff4' ,opacity: 1}
+                symbolSize: 8,
+                itemStyle: { color: '#379ff4', opacity: 1 }
               }
             })
             setEchartsOption({
@@ -170,10 +171,10 @@ export default function App() {
                 data: [...line1dir1, ...line1dir2, ...line2dir1, ...line2dir2]
               }, {
                 data: [
-                  { coords: [[0, 0], [0, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2,opacity: 1 } },
-                  { coords: [[1, 0], [1, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2,opacity: 1 } },
-                  { coords: [[2, 0], [2, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2,opacity: 1 } },
-                  { coords: [[3, 0], [3, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2 ,opacity: 1} }
+                  { coords: [[0, 0], [0, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2, opacity: 1 } },
+                  { coords: [[1, 0], [1, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2, opacity: 1 } },
+                  { coords: [[2, 0], [2, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2, opacity: 1 } },
+                  { coords: [[3, 0], [3, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2, opacity: 1 } }
                 ]
               }]
             })
@@ -192,7 +193,7 @@ export default function App() {
 
           //哪条线路
           let thisroute = 0
-          if (bus_plate_hash[f.id].route==2){
+          if (bus_plate_hash[f.id].route == 2) {
             thisroute = 1
           }
           //判断是在哪个方向上
@@ -213,7 +214,7 @@ export default function App() {
           if (((f.course - bearing) < 30) && ((f.course - bearing) > -30)) {
             route_dir = 1
             return {
-              value: [route_dir+thisroute*2, p_nearest_loc * 1000],
+              value: [route_dir + thisroute * 2, p_nearest_loc * 1000],
               name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
               symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
               symbolSize: 30,
@@ -223,7 +224,7 @@ export default function App() {
           } else if (((f.course - bearing) < -150) || ((f.course - bearing) > 150)) {
             route_dir = 0
             return {
-              value: [route_dir+thisroute*2, turf.length(thisline) * 1000 - p_nearest_loc * 1000],
+              value: [route_dir + thisroute * 2, turf.length(thisline) * 1000 - p_nearest_loc * 1000],
               name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
               symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
               symbolSize: 30,
@@ -279,8 +280,8 @@ export default function App() {
           const point = turf.point([lng, lat])
           const nearest_line1 = turf.nearestPoint(point, stops1);
           const nearest_line2 = turf.nearestPoint(point, stops2);
-          let data1=[];
-          let data2=[];
+          let data1 = [];
+          let data2 = [];
           if (parseInt(nearest_line1.properties.distanceToPoint * 1000) > 0) {
             data1 = [
               {
@@ -312,7 +313,7 @@ export default function App() {
               markPoint: {
                 symbol: 'arrow',
                 symbolRotate: -90,
-                symbolOffset:['-50%',0],
+                symbolOffset: ['-50%', 0],
                 symbolSize: 10,
                 label: {
                   fontSize: 10,
@@ -333,13 +334,22 @@ export default function App() {
   }, 500, { immediate: true });
 
   return (
+
     <div className='container'>
+
       <ReactECharts
         option={option}
         ref={mycharts}
         style={{ height: '744px', width: '375px' }}
       />
+      <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
+        target="_blank"
+        color='orange'
+        position="right-bottom">
+        Fork me on GitHub
+      </GitHubForkRibbon>
     </div >
+
   )
 }
 
