@@ -28,14 +28,14 @@ export default function App() {
     "8447": { "plate": "粤BDF447", 'route': 1 },//确定
     "18447": { "plate": "粤BDF447", 'route': 1 },//确定
     "8458": { "plate": "粤BDF458", 'route': 1 },//确定
-    "8267": { "plate": "粤BDF267" },
-    "8338": { "plate": "粤BDF338" },
-    "8330": { "plate": "粤BDF330" },
-    "298": { "plate": "粤BDF298" },
-    "363": { "plate": "粤BDF363" },
-    "8040": { "plate": "粤BDF040" },
-    "8430": { "plate": "粤BDF430" },
-    "8470": { "plate": "粤BDF470" },
+    "8267": { "plate": "粤BDF267" , 'route': 2 },
+    "8338": { "plate": "粤BDF338" , 'route': 2 },
+    "8330": { "plate": "粤BDF330" , 'route': 2 },
+    "298": { "plate": "粤BDF298" , 'route': 2 },
+    "363": { "plate": "粤BDF363" , 'route': 2 },
+    "8040": { "plate": "粤BDF040" , 'route': 2 },
+    "8430": { "plate": "粤BDF430", 'route': 2 },
+    "8470": { "plate": "粤BDF470" , 'route': 2 }
 
   }
 
