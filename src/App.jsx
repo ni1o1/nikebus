@@ -23,19 +23,19 @@ export default function App() {
     "298": { "plate": "粤BDF298" },
     "363": { "plate": "粤BDF363" },
     "8040": { "plate": "粤BDF040" },
-    "8147": { "plate": "粤BDF147" },
+    "8147": { "plate": "粤BDF147", 'route': 1 },//确定
     "8267": { "plate": "粤BDF267" },
     "8330": { "plate": "粤BDF330" },
-    "8335": { "plate": "粤BDF335" },
+    "8335": { "plate": "粤BDF335", 'route': 1 },//确定
     "8338": { "plate": "粤BDF338" },
-    "8345": { "plate": "粤BDF345" },
-    "8365": { "plate": "粤BDF365" },
-    "8411": { "plate": "粤BDF411" },
+    "8345": { "plate": "粤BDF345", 'route': 1 },//确定
+    "8365": { "plate": "粤BDF365", 'route': 1 },//确定
+    "8411": { "plate": "粤BDF411", 'route': 1 },//确定
     "8430": { "plate": "粤BDF430" },
     "8447": { "plate": "粤BDF447" },
-    "8458": { "plate": "粤BDF458" },
+    "8458": { "plate": "粤BDF458", 'route': 1 },//确定
     "8470": { "plate": "粤BDF470" },
-    "18447": { "plate": "粤BDF447" }
+    "18447": { "plate": "粤BDF447", 'route': 1 },//确定
   }
 
   //加载整体图表
@@ -211,7 +211,8 @@ export default function App() {
           }
           //通过车辆方向角判断车辆行进方向
           let route_dir = 2
-          if (((f.course - bearing) < 30) && ((f.course - bearing) > -30)) {
+          const angle = parseInt(f.course) - parseInt(bearing)
+          if ((angle < 20) && (angle > -20)) {
             route_dir = 1
             return {
               value: [route_dir + thisroute * 2, p_nearest_loc * 1000],
@@ -221,7 +222,7 @@ export default function App() {
               symbolRotate: 180,
               speed: f.speed
             }
-          } else if (((f.course - bearing) < -150) || ((f.course - bearing) > 150)) {
+          } else if ((angle < -160) || (angle > 160)) {
             route_dir = 0
             return {
               value: [route_dir + thisroute * 2, turf.length(thisline) * 1000 - p_nearest_loc * 1000],
@@ -276,35 +277,54 @@ export default function App() {
         navigator.geolocation.getCurrentPosition(pos => {
           let lat = pos.coords.latitude,
             lng = pos.coords.longitude;
-          // 标记出最近的站点
+          //标记出最近的站点
           const point = turf.point([lng, lat])
           const nearest_line1 = turf.nearestPoint(point, stops1);
+          const line1_pos_dir1 = turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000
+          const line1_pos_dir2 = turf.length(lines[0]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000
           const nearest_line2 = turf.nearestPoint(point, stops2);
+          const line2_pos_dir1 = turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000
+          const line2_pos_dir2 = turf.length(lines[1]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000
+          //计算下一趟车大概多久到
+          //0
+          const buspos_0 = historybusdata.filter(f => (f.value[0] == 0) && (f.value[1] <= line1_pos_dir2)).map(f=>parseInt((line1_pos_dir2-f.value[1])/250) )
+          
+          //1
+          const buspos_1 = historybusdata.filter(f => (f.value[0] == 1) && (f.value[1] <= line1_pos_dir1)).map(f=>parseInt((line1_pos_dir1-f.value[1])/250) )
+          //2
+          const buspos_2 = historybusdata.filter(f => (f.value[0] == 2) && (f.value[1] <= line2_pos_dir2)).map(f=>parseInt((line2_pos_dir2-f.value[1])/250 ))
+          //3
+          const buspos_3 = historybusdata.filter(f => (f.value[0] == 3) && (f.value[1] <= line2_pos_dir1)).map(f=>parseInt((line2_pos_dir1-f.value[1])/250 ))
+          const bustext_0=buspos_0.length>0?'\n约'+Math.min(...buspos_0)+'分钟':''
+          const bustext_1=buspos_1.length>0?'\n约'+Math.min(...buspos_1)+'分钟':''
+          const bustext_2=buspos_2.length>0?'\n约'+Math.min(...buspos_2)+'分钟':''
+          const bustext_3=buspos_3.length>0?'\n约'+Math.min(...buspos_3)+'分钟':''
+
           let data1 = [];
           let data2 = [];
           if (parseInt(nearest_line1.properties.distanceToPoint * 1000) > 0) {
             data1 = [
               {
-                name: parseInt(nearest_line1.properties.distanceToPoint * 1000) + 'm',
+                name: '离您最近'+bustext_1,
                 itemStyle: { color: '#ff881b' },
-                coord: [1, turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000]
+                coord: [1, line1_pos_dir1]
               },
               {
-                name: parseInt(nearest_line1.properties.distanceToPoint * 1000) + 'm',
+                name: '离您最近'+bustext_0,
                 itemStyle: { color: '#ff881b' },
-                coord: [0, turf.length(lines[0]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000]
+                coord: [0, line1_pos_dir2]
               }]
           }
           if (parseInt(nearest_line2.properties.distanceToPoint * 1000) > 0) {
             data2 = [{
-              name: parseInt(nearest_line2.properties.distanceToPoint * 1000) + 'm',
+              name: '离您最近'+bustext_3,
               itemStyle: { color: '#379ff4' },
-              coord: [3, turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000]
+              coord: [3, line2_pos_dir1]
             },
             {
-              name: parseInt(nearest_line2.properties.distanceToPoint * 1000) + 'm',
+              name: '离您最近'+bustext_2,
               itemStyle: { color: '#379ff4' },
-              coord: [2, turf.length(lines[1]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000]
+              coord: [2, line2_pos_dir2]
             }
             ]
           }
