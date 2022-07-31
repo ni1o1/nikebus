@@ -12,8 +12,8 @@ export default function App() {
   const mycharts = useRef()
   const [option, setEchartsOption] = useState({})
   const [lines, setLines] = useState([])
-  const [stops1,setStops1]=useState([])
-  const [stops2,setStops2]=useState([])
+  const [stops1, setStops1] = useState([])
+  const [stops2, setStops2] = useState([])
   const [historybusdata, sethistorybusdata] = useState([])
   const bus_plate_hash = {
     "298": { "plate": "粤BDF298" },
@@ -49,6 +49,7 @@ export default function App() {
       }],
       grid: [{
         top: '11%',
+        bottom: '0%',
         left: '2%',
         right: '6%',
       }],
@@ -102,6 +103,7 @@ export default function App() {
         label: {
           fontSize: 11,
           show: true,
+          fontWeight:'bold',
           position: 'right',
           formatter: '{b}'
         },
@@ -260,37 +262,55 @@ export default function App() {
             lng = pos.coords.longitude;
           // 标记出最近的站点
           const point = turf.point([lng, lat])
-          
-          const nearest_line1 = turf.nearestPoint(point,stops1 );
-          const nearest_line2 = turf.nearestPoint(point,stops2 );
+          const nearest_line1 = turf.nearestPoint(point, stops1);
+          const nearest_line2 = turf.nearestPoint(point, stops2);
+          let data1=[];
+          let data2=[];
+          if (parseInt(nearest_line1.properties.distanceToPoint * 1000) > 0) {
+            data1 = [
+              {
+                name: parseInt(nearest_line1.properties.distanceToPoint * 1000) + 'm',
+                itemStyle: { color: '#ff881b' },
+                coord: [1, turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000]
+              },
+              {
+                name: parseInt(nearest_line1.properties.distanceToPoint * 1000) + 'm',
+                itemStyle: { color: '#ff881b' },
+                coord: [0, turf.length(lines[0]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000]
+              }]
+          }
+          if (parseInt(nearest_line2.properties.distanceToPoint * 1000) > 0) {
+            data2 = [{
+              name: parseInt(nearest_line2.properties.distanceToPoint * 1000) + 'm',
+              itemStyle: { color: '#379ff4' },
+              coord: [3, turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000]
+            },
+            {
+              name: parseInt(nearest_line2.properties.distanceToPoint * 1000) + 'm',
+              itemStyle: { color: '#379ff4' },
+              coord: [2, turf.length(lines[1]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000]
+            }
+            ]
+          }
           setEchartsOption({
             series: [{
-              markPoint:{
-                symbol:'arrow',
-                symbolRotate:-90,
-                symbolSize:12,
-                label:{show:true,
-                  position: 'left',formatter:'{b}'},
-                data:[
-                  {name:parseInt(nearest_line1.properties.distanceToPoint*1000)+'m',
-                  itemStyle:{color: '#ff881b'},
-                  coord: [1, turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000]
+              markPoint: {
+                symbol: 'arrow',
+                symbolRotate: -90,
+                symbolOffset:['-50%',0],
+                symbolSize: 10,
+                label: {
+                  fontSize: 10,
+                  show: true,
+                  color: '#999',
+                  position: 'left', formatter: '{b}'
                 },
-                {name:parseInt(nearest_line1.properties.distanceToPoint*1000)+'m',
-                itemStyle:{color: '#ff881b'},
-                  coord: [0, turf.length(lines[0]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000]
-                },
-                {name:parseInt(nearest_line2.properties.distanceToPoint*1000)+'m',
-                itemStyle:{color: '#379ff4'},
-                  coord: [3, turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000]
-                },
-                {name:parseInt(nearest_line2.properties.distanceToPoint*1000)+'m',
-                itemStyle:{color: '#379ff4'},
-                  coord: [2, turf.length(lines[1]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000]
-                }
+                data: [
+                  ...data1,
+                  ...data2
                 ]
               }
-            }, {}, { }]
+            }, {}, {}]
           })
         })
       }
@@ -302,7 +322,7 @@ export default function App() {
       <ReactECharts
         option={option}
         ref={mycharts}
-        style={{ height: '844px', width: '375px' }}
+        style={{ height: '744px', width: '375px' }}
       />
     </div >
   )
