@@ -137,32 +137,32 @@ export default function App() {
               return {
                 value: [1, turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
                 name: f.properties.name, 
-                symbolSize:12,
-                itemStyle: { color: '#ff881b' }
+                symbolSize:8,
+                itemStyle: { color: '#ff881b',opacity: 1 }
               }
             })
             const line1dir2 = stop1data.features.map(f => {
               return {
                 value: [0, turf.length(line1data['features'][0]) * 1000 - turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
                 name: f.properties.name, 
-                symbolSize:12,
-                itemStyle: { color: '#ff881b' }
+                symbolSize:8,
+                itemStyle: { color: '#ff881b' ,opacity: 1}
               }
             })
             const line2dir1 = stop2data.features.map(f => {
               return {
                 value: [3, turf.nearestPointOnLine(line2data['features'][0], f).properties.location * 1000],
                 name: f.properties.name, 
-                symbolSize:12,
-                itemStyle: { color: '#379ff4' }
+                symbolSize:8,
+                itemStyle: { color: '#379ff4' ,opacity: 1}
               }
             })
             const line2dir2 = stop2data.features.map(f => {
               return {
                 value: [2, turf.length(line2data['features'][0]) * 1000 - turf.nearestPointOnLine(line2data['features'][0], f).properties.location * 1000],
                 name: f.properties.name,
-                symbolSize:12,
-                itemStyle: { color: '#379ff4' }
+                symbolSize:8,
+                itemStyle: { color: '#379ff4' ,opacity: 1}
               }
             })
             setEchartsOption({
@@ -170,10 +170,10 @@ export default function App() {
                 data: [...line1dir1, ...line1dir2, ...line2dir1, ...line2dir2]
               }, {
                 data: [
-                  { coords: [[0, 0], [0, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2 } },
-                  { coords: [[1, 0], [1, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2 } },
-                  { coords: [[2, 0], [2, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2 } },
-                  { coords: [[3, 0], [3, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2 } }
+                  { coords: [[0, 0], [0, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2,opacity: 1 } },
+                  { coords: [[1, 0], [1, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2,opacity: 1 } },
+                  { coords: [[2, 0], [2, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2,opacity: 1 } },
+                  { coords: [[3, 0], [3, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2 ,opacity: 1} }
                 ]
               }]
             })
