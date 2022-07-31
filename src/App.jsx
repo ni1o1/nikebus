@@ -44,13 +44,13 @@ export default function App() {
         show: false,
       },
       title: [{
-        text: '南科大校巴实时位置(by小旭学长)',
-        subtext: '测试中'
+        text: '南科大校巴实时位置(测试中)',
+        subtext: 'bilibili@交通数据小旭学长'
       }],
       grid: [{
         top: '11%',
         left: '2%',
-        right: '10%',
+        right: '6%',
       }],
       yAxis: [{
         inverse: true,
@@ -111,7 +111,8 @@ export default function App() {
         data: [
         ]
       }
-      ]
+      ],
+      animationDurationUpdate:500
     })
 
   }, [])
@@ -192,7 +193,7 @@ export default function App() {
           }
           //通过车辆方向角判断车辆行进方向
           let route_dir = 2
-          if (((f.course - bearing) < 45) && ((f.course - bearing) > -45)) {
+          if (((f.course - bearing) < 30) && ((f.course - bearing) > -30)) {
             route_dir = 1
             return {
               value: [route_dir, p_nearest_loc * 1000],
@@ -202,7 +203,7 @@ export default function App() {
               symbolRotate: 180,
               speed: f.speed
             }
-          } else if (((f.course - bearing) < -135) || ((f.course - bearing) > 135)) {
+          } else if (((f.course - bearing) < -150) || ((f.course - bearing) > 150)) {
             route_dir = 0
             return {
               value: [route_dir, turf.length(thisline) * 1000 - p_nearest_loc * 1000],
@@ -241,7 +242,7 @@ export default function App() {
       //0.5秒通过速度推测一次车辆的位置
       const newdata = historybusdata.map(f => {
         if (typeof (f) != 'undefined') {
-          return { ...f, value: [f.value[0], f.value[1] + f.speed * 1000 / 7200] }
+          return { ...f, value: [f.value[0], f.value[1] + f.speed*0.5 * 1000 / 7200] }
         }
       })
       sethistorybusdata(newdata)
@@ -258,6 +259,7 @@ export default function App() {
         ref={mycharts}
         style={{ height: '844px', width: '375px' }}
       />
+      <img src="https://visitor-badge.glitch.me/badge?page_id=nikebus" alt="visitor badge"/>
     </div >
   )
 }
