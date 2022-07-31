@@ -9,12 +9,11 @@ import './App.css';
 
 export default function App() {
 
-
-
   const mycharts = useRef()
   const [option, setEchartsOption] = useState({})
-
   const [lines, setLines] = useState([])
+  const [stops1,setStops1]=useState([])
+  const [stops2,setStops2]=useState([])
   const [historybusdata, sethistorybusdata] = useState([])
   const bus_plate_hash = {
     "298": { "plate": "粤BDF298" },
@@ -29,15 +28,16 @@ export default function App() {
     "8365": { "plate": "粤BDF365" },
     "8371": { "plate": "粤BDF371" },
     "8411": { "plate": "粤BDF411" },
-    "8421": { "plate": "粤BDF421" },
+    "8421": { "plate": "粤BDF421", 'route': 1 },
     "8430": { "plate": "粤BDF430" },
     "8447": { "plate": "粤BDF447" },
     "8458": { "plate": "粤BDF458" },
     "8470": { "plate": "粤BDF470" },
-    "8471": { "plate": "粤BDF471" },
+    "8471": { "plate": "粤BDF471", 'route': 1 },
     "18447": { "plate": "粤BDF447" }
   }
 
+  //加载整体图表
   useEffect(() => {
     setEchartsOption({
       tooltip: {
@@ -102,7 +102,6 @@ export default function App() {
         label: {
           fontSize: 11,
           show: true,
-
           position: 'right',
           formatter: '{b}'
         },
@@ -112,7 +111,7 @@ export default function App() {
         ]
       }
       ],
-      animationDurationUpdate:500
+      animationDurationUpdate: 500
     })
 
   }, [])
@@ -129,6 +128,8 @@ export default function App() {
             const stop1data = responsestop1.data
             const stop2data = responsestop2.data
             setLines([line1data, line2data])
+            setStops1(stop1data)
+            setStops2(stop2data)
             const line1dir1 = stop1data.features.map(f => {
               return {
                 value: [1, turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
@@ -169,7 +170,6 @@ export default function App() {
         })
       })
     })
-
   }, [])
 
   //更新车辆位置
@@ -228,10 +228,14 @@ export default function App() {
     }
   }
 
+  //挂载时更新车辆位置
   useEffect(() => {
     updatebuspos()
+
+
   }, [lines])
 
+  //周期性更新车辆位置
   const [times, settimes] = useState(0)
   useInterval(() => {
     settimes(times + 1)
@@ -242,13 +246,54 @@ export default function App() {
       //0.5秒通过速度推测一次车辆的位置
       const newdata = historybusdata.map(f => {
         if (typeof (f) != 'undefined') {
-          return { ...f, value: [f.value[0], f.value[1] + f.speed*0.5 * 1000 / 7200] }
+          return { ...f, value: [f.value[0], f.value[1] + f.speed * 0.5 * 1000 / 7200] }
         }
       })
       sethistorybusdata(newdata)
       setEchartsOption({
         series: [{}, {}, { data: newdata }]
       })
+      //获取定位
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          let lat = pos.coords.latitude,
+            lng = pos.coords.longitude;
+          // 标记出最近的站点
+          const point = turf.point([lng, lat])
+          
+          const nearest_line1 = turf.nearestPoint(point,stops1 );
+          const nearest_line2 = turf.nearestPoint(point,stops2 );
+          setEchartsOption({
+            series: [{
+              markPoint:{
+                symbol:'arrow',
+                symbolRotate:-90,
+                symbolSize:12,
+                label:{show:true,
+                  position: 'left',formatter:'{b}'},
+                data:[
+                  {name:parseInt(nearest_line1.properties.distanceToPoint*1000)+'m',
+                  itemStyle:{color: '#ff881b'},
+                  coord: [1, turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000]
+                },
+                {name:parseInt(nearest_line1.properties.distanceToPoint*1000)+'m',
+                itemStyle:{color: '#ff881b'},
+                  coord: [0, turf.length(lines[0]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000]
+                },
+                {name:parseInt(nearest_line2.properties.distanceToPoint*1000)+'m',
+                itemStyle:{color: '#379ff4'},
+                  coord: [3, turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000]
+                },
+                {name:parseInt(nearest_line2.properties.distanceToPoint*1000)+'m',
+                itemStyle:{color: '#379ff4'},
+                  coord: [2, turf.length(lines[1]['features'][0]) * 1000 - turf.nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000]
+                }
+                ]
+              }
+            }, {}, { }]
+          })
+        })
+      }
     }
   }, 500, { immediate: true });
 
