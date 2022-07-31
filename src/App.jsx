@@ -370,6 +370,7 @@ export default function App() {
 
   return (
     <div className='container'>
+
       <ReactECharts
         option={option}
         ref={mycharts}
@@ -381,6 +382,9 @@ export default function App() {
         position="right-bottom">
         Fork me on GitHub
       </GitHubForkRibbon>
+      <div >
+      <img src="https://visitor-badge.laobi.icu/badge?page_id=nikebus" alt="visitor badge"/>
+      </div>
     </div >
 
   )
