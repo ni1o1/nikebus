@@ -51,7 +51,7 @@ export default function App() {
       grid: [{
         top: '13%',
         bottom: '0%',
-        left: '2%',
+        left: '3%',
         right: '4%',
       }],
       yAxis: [{
@@ -338,7 +338,7 @@ export default function App() {
                 label: {
                   fontSize: 10,
                   show: true,
-                  color: '#999',
+                  color: '#444',
                   position: 'left', formatter: '{b}'
                 },
                 data: [
