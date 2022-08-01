@@ -26,7 +26,7 @@ export default function App() {
     "8365": { "plate": "粤BDF365", 'route': 1 },//确定
     "8411": { "plate": "粤BDF411", 'route': 1 },//确定
     "8447": { "plate": "粤BDF447", 'route': 1 },//确定
-    "18447": { "plate": "粤BDF447", 'route': 1 },//确定
+    "18447": { "plate": "粤BDF1447", 'route': 2 },//确定
     "8458": { "plate": "粤BDF458", 'route': 1 },//确定
     "8267": { "plate": "粤BDF267" , 'route': 2 },
     "8338": { "plate": "粤BDF338" , 'route': 2 },
@@ -35,7 +35,7 @@ export default function App() {
     "363": { "plate": "粤BDF363" , 'route': 2 },
     "8040": { "plate": "粤BDF040" , 'route': 2 },
     "8430": { "plate": "粤BDF430", 'route': 2 },
-    "8470": { "plate": "粤BDF470" , 'route': 2 }
+    "8470": { "plate": "粤BDF470" , 'route': 1 }//确定
 
   }
 
@@ -284,11 +284,27 @@ export default function App() {
       //0.5秒通过速度推测一次车辆的位置
       const newdata = historybusdata.map(f => {
         if (typeof (f) != 'undefined') {
-          return { ...f, value: [f.value[0], f.value[1] + f.speed * 0.5 * 1000 / 7200] }
+          let routedir = 2
+          if(f.value[0]==1){
+            routedir=0
+          }
+          if(f.value[0]==2){
+            routedir=1
+          }
+          if(f.value[0]==0){
+            routedir=2
+          }
+          let next_dist=f.value[1] + f.speed * 0.5 * 1000 / 7200
+          if(next_dist>turf.length(lines[routedir]['features'][0]) * 1000 
+          ){
+            next_dist = turf.length(lines[routedir]['features'][0]) * 1000 
+          }
+          return { ...f, value: [f.value[0], next_dist] }
         }
       })
       sethistorybusdata(newdata.filter(p=>typeof(p) != 'undefined'))
       setEchartsOption({
+      
         series: [{}, {}, { data: newdata }]
       })
       //获取定位
@@ -347,6 +363,7 @@ export default function App() {
           ]
 
           setEchartsOption({
+        
             series: [{
               markPoint: {
                 symbol: 'arrow',
