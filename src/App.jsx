@@ -231,7 +231,7 @@ export default function App() {
             let dist = turf.length(thisline) * 1000 - p_nearest_loc * 1000
             //如果是线路1的另一个方向，则重新计算距离
             if (thisroute == 0) {
-              thisline = lines[thisroute]['features'][2]
+              thisline = lines[2]['features'][0]
               p_nearest = turf.nearestPointOnLine(thisline, mcp)
               p_nearest_loc = p_nearest.properties.location
               dist = turf.length(thisline) * 1000 - p_nearest_loc * 1000
@@ -247,7 +247,9 @@ export default function App() {
           } else {
             //从历史信息里找到这辆车的信息
             if (historybusdata.length > 0) {
-              const historybusdata_this = historybusdata.filter(p => p.name == bus_plate_hash[f.id].plate)
+              const historybusdata_this = historybusdata.filter(p => {if(typeof(p) != 'undefined'){
+                return p.name == bus_plate_hash[f.id].plate}}
+                )
               if (historybusdata_this.length > 0) {
                 return historybusdata_this[0]
               }
@@ -257,7 +259,8 @@ export default function App() {
 
         }
         )
-        sethistorybusdata(busdata)
+
+        sethistorybusdata(busdata.filter(p=>typeof(p) != 'undefined'))
         setEchartsOption({
           series: [{}, {}, { data: busdata }]
         })
@@ -284,7 +287,7 @@ export default function App() {
           return { ...f, value: [f.value[0], f.value[1] + f.speed * 0.5 * 1000 / 7200] }
         }
       })
-      sethistorybusdata(newdata)
+      sethistorybusdata(newdata.filter(p=>typeof(p) != 'undefined'))
       setEchartsOption({
         series: [{}, {}, { data: newdata }]
       })
