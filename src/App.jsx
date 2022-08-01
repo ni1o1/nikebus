@@ -193,7 +193,7 @@ export default function App() {
     if (lines.length > 0) {
       axios.get('https://bus.sustcra.com/api/v2/monitor_osm/').then(response => {
         const res = response.data
-        const busdata = res.filter(f => f.time_rt - f.time_mt < 300000000).map(f => {
+        const busdata = res.filter(f => f.time_rt - f.time_mt < 300).map(f => {
 
           //哪条线路
           let thisroute = 0
