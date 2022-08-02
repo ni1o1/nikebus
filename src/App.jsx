@@ -25,8 +25,8 @@ export default function App() {
     "8345": { "plate": "粤BDF345", 'route': 1 },//确定
     "8365": { "plate": "粤BDF365", 'route': 1 },//确定
     "8411": { "plate": "粤BDF411", 'route': 1 },//确定
-    "8447": { "plate": "粤BDF447", 'route': 1 },//确定
-    "18447": { "plate": "粤BDF1447", 'route': 1 },//确定
+    "8447": { "plate": "粤BDE447", 'route': 1 },//确定
+    "18447": { "plate": "粤BDF447", 'route': 1 },//确定
     "8458": { "plate": "粤BDF458", 'route': 1 },//确定
     "8267": { "plate": "粤BDF267" , 'route': 1 },
     "8338": { "plate": "粤BDF338" , 'route': 1 },
