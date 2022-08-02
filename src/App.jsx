@@ -197,7 +197,7 @@ export default function App() {
 
           //哪条线路
           let thisroute = 0
-          if (bus_plate_hash[f.id].route == 2) {
+          if (f.route_code==202){
             thisroute = 1
           }
           //判断是在哪个方向上
