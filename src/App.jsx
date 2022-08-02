@@ -76,6 +76,7 @@ export default function App() {
         axisTick: {
           show: false
         },
+        axisLabel:{interval:0},
         type: 'category',
         data: ['1号线\n工学院方向',
           '1号线\n欣园方向',
