@@ -46,7 +46,7 @@ export default function App() {
         show: false,
       },
       title: [{
-        text: '南科大校巴实时位置（暂无法区分一二号线）',
+        text: '南科大校巴实时位置',
         subtext: 'bilibili@交通数据小旭学长'
       }],
       grid: [{
@@ -396,7 +396,7 @@ export default function App() {
         ref={mycharts}
         style={{ height: '744px', width: '100%' }}
       />
-{/*       <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
+       <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
         target="_blank"
         color='orange'
         position="right-bottom">
@@ -404,7 +404,7 @@ export default function App() {
       </GitHubForkRibbon>
       <div >
       <img src="https://visitor-badge.laobi.icu/badge?page_id=nikebus" alt="visitor badge"/>
-      </div> */}
+      </div> 
     </div >
 
   )
