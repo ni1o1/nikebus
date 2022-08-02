@@ -396,7 +396,7 @@ export default function App() {
         ref={mycharts}
         style={{ height: '744px', width: '100%' }}
       />
-      <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
+{/*       <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
         target="_blank"
         color='orange'
         position="right-bottom">
@@ -404,7 +404,7 @@ export default function App() {
       </GitHubForkRibbon>
       <div >
       <img src="https://visitor-badge.laobi.icu/badge?page_id=nikebus" alt="visitor badge"/>
-      </div>
+      </div> */}
     </div >
 
   )
