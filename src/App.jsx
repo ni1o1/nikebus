@@ -116,7 +116,9 @@ export default function App() {
         ]
       }
       ],
-      animationDurationUpdate: 500
+      stateAnimation:{
+        duration:500
+      }
     })
 
   }, [])
@@ -340,23 +342,23 @@ export default function App() {
 
           data1 = [
             {
-              name: '最近' + bustext_1,
+              name: ' 最近' + bustext_1,
               itemStyle: { color: '#ff881b' },
               coord: [1, line1_pos_dir1]
             },
             {
-              name: '最近' + bustext_0,
+              name: '  最近' + bustext_0,
               itemStyle: { color: '#ff881b' },
               coord: [0, line1_pos_dir2]
             }]
 
           data2 = [{
-            name: '最近' + bustext_3,
+            name: '   最近' + bustext_3,
             itemStyle: { color: '#379ff4' },
             coord: [3, line2_pos_dir1]
           },
           {
-            name: '最近' + bustext_2,
+            name: '    最近' + bustext_2,
             itemStyle: { color: '#379ff4' },
             coord: [2, line2_pos_dir2]
           }
