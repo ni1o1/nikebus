@@ -422,24 +422,26 @@ export default function App() {
   }, 500, {immediate: true});
 
   return (
-      <div className='container'>
+      // <div className='container'>
+      //
+      //
+      //   {/*        <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
+      //   target="_blank"
+      //   color='orange'
+      //   position="right-bottom">
+      //   Fork me on GitHub
+      // </GitHubForkRibbon>
+      // <div >
+      // <img src="https://visitor-badge.laobi.icu/badge?page_id=nikebus" alt="visitor badge"/>
+      // </div>  */}
+      // </div>
 
-        <ReactECharts
-            option={option}
-            ref={mycharts}
-            style={{height: '744px', width: '100%'}}
-            theme={bg_theme}
-        />
-        {/*        <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
-        target="_blank"
-        color='orange'
-        position="right-bottom">
-        Fork me on GitHub
-      </GitHubForkRibbon>
-      <div >
-      <img src="https://visitor-badge.laobi.icu/badge?page_id=nikebus" alt="visitor badge"/>
-      </div>  */}
-      </div>
+  <ReactECharts
+      option={option}
+      ref={mycharts}
+      style={{height: '800px', width: '100%'}}
+      theme={bg_theme}
+  />
 
   )
 }
