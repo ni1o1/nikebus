@@ -435,14 +435,15 @@ export default function App() {
       // <img src="https://visitor-badge.laobi.icu/badge?page_id=nikebus" alt="visitor badge"/>
       // </div>  */}
       // </div>
-
+<>
   <ReactECharts
       option={option}
       ref={mycharts}
       style={{height: '800px', width: '100%'}}
       theme={bg_theme}
   />
-
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=nikebus" alt="visitor badge" style={ {'visibility': 'hidden'}}/>
+</>
   )
 }
 
