@@ -6,10 +6,24 @@ import * as turf from '@turf/turf'
 import { useInterval } from 'ahooks';
 import GitHubForkRibbon from 'react-github-fork-ribbon';
 import './App.css';
-
+import {registerTheme} from "echarts";
 
 export default function App() {
+  // register theme object
+  registerTheme('bg_theme_light', {
+    backgroundColor: '#ffffff'
+  });
+  registerTheme('bg_theme_dark', {
+    backgroundColor: '#22272e'
+  });
 
+  let bg_theme = 'bg_theme_light'
+  //determine day or night
+  const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const userPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (userPrefersDark) {
+    bg_theme = 'bg_theme_dark'
+  }
   const mycharts = useRef()
   const [option, setEchartsOption] = useState({})
   const [lines, setLines] = useState([])
@@ -17,25 +31,25 @@ export default function App() {
   const [stops2, setStops2] = useState([])
   const [historybusdata, sethistorybusdata] = useState([])
   const bus_plate_hash = {
-    "8371": { "plate": "粤BDF371", 'route': 1 },//确定
-    "8421": { "plate": "粤BDF421", 'route': 1 },//确定
-    "8471": { "plate": "粤BDF471", 'route': 1 },//确定
-    "8147": { "plate": "粤BDF147", 'route': 1 },//确定
-    "8335": { "plate": "粤BDF335", 'route': 1 },//确定
-    "8345": { "plate": "粤BDF345", 'route': 1 },//确定
-    "8365": { "plate": "粤BDF365", 'route': 1 },//确定
-    "8411": { "plate": "粤BDF411", 'route': 1 },//确定
-    "8447": { "plate": "粤BDE447", 'route': 1 },//确定
-    "18447": { "plate": "粤BDF447", 'route': 1 },//确定
-    "8458": { "plate": "粤BDF458", 'route': 1 },//确定
-    "8267": { "plate": "粤BDF267" , 'route': 1 },
-    "8338": { "plate": "粤BDF338" , 'route': 1 },
-    "8330": { "plate": "粤BDF330" , 'route': 1 },
-    "298": { "plate": "粤BDF298" , 'route': 1},
-    "363": { "plate": "粤BDF363" , 'route': 1 },
-    "8040": { "plate": "粤BDF040" , 'route': 1 },
-    "8430": { "plate": "粤BDF430", 'route': 1 },
-    "8470": { "plate": "粤BDF470" , 'route': 1 }//确定
+    "8371": {"plate": "粤BDF371", 'route': 1},//确定
+    "8421": {"plate": "粤BDF421", 'route': 1},//确定
+    "8471": {"plate": "粤BDF471", 'route': 1},//确定
+    "8147": {"plate": "粤BDF147", 'route': 1},//确定
+    "8335": {"plate": "粤BDF335", 'route': 1},//确定
+    "8345": {"plate": "粤BDF345", 'route': 1},//确定
+    "8365": {"plate": "粤BDF365", 'route': 1},//确定
+    "8411": {"plate": "粤BDF411", 'route': 1},//确定
+    "8447": {"plate": "粤BDE447", 'route': 1},//确定
+    "18447": {"plate": "粤BDF447", 'route': 1},//确定
+    "8458": {"plate": "粤BDF458", 'route': 1},//确定
+    "8267": {"plate": "粤BDF267", 'route': 1},
+    "8338": {"plate": "粤BDF338", 'route': 1},
+    "8330": {"plate": "粤BDF330", 'route': 1},
+    "298": {"plate": "粤BDF298", 'route': 1},
+    "363": {"plate": "粤BDF363", 'route': 1},
+    "8040": {"plate": "粤BDF040", 'route': 1},
+    "8430": {"plate": "粤BDF430", 'route': 1},
+    "8470": {"plate": "粤BDF470", 'route': 1}//确定
 
   }
 
@@ -45,10 +59,10 @@ export default function App() {
       tooltip: {
         show: false,
       },
-/*       title: [{
-        text: '南科大校巴实时位置',
-        subtext: 'bilibili@交通数据小旭学长'
-      }], */
+      /*       title: [{
+              text: '南科大校巴实时位置',
+              subtext: 'bilibili@交通数据小旭学长'
+            }], */
       grid: [{
         top: '13%',
         bottom: '0%',
@@ -76,7 +90,7 @@ export default function App() {
         axisTick: {
           show: false
         },
-        axisLabel:{interval:0},
+        axisLabel: {interval: 0},
         type: 'category',
         data: ['1号线\n工学院方向',
           '1号线\n欣园方向',
@@ -100,8 +114,7 @@ export default function App() {
       }, {
         type: 'lines',
         coordinateSystem: 'cartesian2d',
-        data: [
-        ]
+        data: []
       }, {
         label: {
           fontSize: 11,
@@ -113,12 +126,11 @@ export default function App() {
         },
         type: 'scatter',
         name: 'bus',
-        data: [
-        ]
+        data: []
       }
       ],
-      stateAnimation:{
-        duration:500
+      stateAnimation: {
+        duration: 500
       }
     })
 
@@ -145,7 +157,7 @@ export default function App() {
                   value: [1, turf.nearestPointOnLine(line1data['features'][0], f).properties.location * 1000],
                   name: f.properties.name,
                   symbolSize: 8,
-                  itemStyle: { color: '#ff881b', opacity: 1 }
+                  itemStyle: {color: '#ff881b', opacity: 1}
                 }
               })
               const line1dir2 = stop1data.features.map(f => {
@@ -153,7 +165,7 @@ export default function App() {
                   value: [0, turf.length(line1data2['features'][0]) * 1000 - turf.nearestPointOnLine(line1data2['features'][0], f).properties.location * 1000],
                   name: f.properties.name,
                   symbolSize: 8,
-                  itemStyle: { color: '#ff881b', opacity: 1 }
+                  itemStyle: {color: '#ff881b', opacity: 1}
                 }
               })
               const line2dir1 = stop2data.features.map(f => {
@@ -161,7 +173,7 @@ export default function App() {
                   value: [3, turf.nearestPointOnLine(line2data['features'][0], f).properties.location * 1000],
                   name: f.properties.name,
                   symbolSize: 8,
-                  itemStyle: { color: '#379ff4', opacity: 1 }
+                  itemStyle: {color: '#379ff4', opacity: 1}
                 }
               })
               const line2dir2 = stop2data.features.map(f => {
@@ -169,7 +181,7 @@ export default function App() {
                   value: [2, turf.length(line2data['features'][0]) * 1000 - turf.nearestPointOnLine(line2data['features'][0], f).properties.location * 1000],
                   name: f.properties.name,
                   symbolSize: 8,
-                  itemStyle: { color: '#379ff4', opacity: 1 }
+                  itemStyle: {color: '#379ff4', opacity: 1}
                 }
               })
               setEchartsOption({
@@ -177,10 +189,22 @@ export default function App() {
                   data: [...line1dir1, ...line1dir2, ...line2dir1, ...line2dir2]
                 }, {
                   data: [
-                    { coords: [[0, 0], [0, turf.length(line1data2['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2, opacity: 1 } },
-                    { coords: [[1, 0], [1, turf.length(line1data['features'][0]) * 1000]], lineStyle: { color: '#ff881b', width: 2, opacity: 1 } },
-                    { coords: [[2, 0], [2, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2, opacity: 1 } },
-                    { coords: [[3, 0], [3, turf.length(line2data['features'][0]) * 1000]], lineStyle: { color: '#379ff4', width: 2, opacity: 1 } }
+                    {
+                      coords: [[0, 0], [0, turf.length(line1data2['features'][0]) * 1000]],
+                      lineStyle: {color: '#ff881b', width: 2, opacity: 1}
+                    },
+                    {
+                      coords: [[1, 0], [1, turf.length(line1data['features'][0]) * 1000]],
+                      lineStyle: {color: '#ff881b', width: 2, opacity: 1}
+                    },
+                    {
+                      coords: [[2, 0], [2, turf.length(line2data['features'][0]) * 1000]],
+                      lineStyle: {color: '#379ff4', width: 2, opacity: 1}
+                    },
+                    {
+                      coords: [[3, 0], [3, turf.length(line2data['features'][0]) * 1000]],
+                      lineStyle: {color: '#379ff4', width: 2, opacity: 1}
+                    }
                   ]
                 }]
               })
@@ -198,74 +222,77 @@ export default function App() {
         const res = response.data
         const busdata = res.filter(f => f.it == 0).map(f => {
 
-          //哪条线路
-          let thisroute = 0
-          if (f.route_code==202){
-            thisroute = 1
-          }
-          //判断是在哪个方向上
-          const mcp = turf.point([f.lng, f.lat])
-          let thisline = lines[thisroute]['features'][0]
-          //线上最近点
-          let p_nearest = turf.nearestPointOnLine(thisline, mcp)
-          let p_nearest_loc = p_nearest.properties.location
-          //线上最近点+1米处的点
-          const p_next = turf.along(thisline, p_nearest_loc + 0.0001);
-          //计算切线角度
-          let bearing = turf.rhumbBearing(p_nearest, p_next);
-          if (bearing < 0) {
-            bearing += 360
-          }
-          //通过车辆方向角判断车辆行进方向
-          let route_dir = 2
-          const angle = parseInt(f.course) - parseInt(bearing)
-          if ((angle < 20) && (angle > -20)) {
-            route_dir = 1
-            return {
-              value: [route_dir + thisroute * 2, p_nearest_loc * 1000],
-              name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
-              symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
-              symbolSize: 30,
-              symbolRotate: 180,
-              speed: f.speed
-            }
-          } else if ((angle < -160) || (angle > 160)) {
-            route_dir = 0
-            let dist = turf.length(thisline) * 1000 - p_nearest_loc * 1000
-            //如果是线路1的另一个方向，则重新计算距离
-            if (thisroute == 0) {
-              thisline = lines[2]['features'][0]
-              p_nearest = turf.nearestPointOnLine(thisline, mcp)
-              p_nearest_loc = p_nearest.properties.location
-              dist = turf.length(thisline) * 1000 - p_nearest_loc * 1000
-            }
-            return {
-              value: [route_dir + thisroute * 2, dist],
-              name: bus_plate_hash[f.id].plate, itemStyle: { color: '#222' },
-              symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
-              symbolSize: 30,
-              symbolRotate: 180,
-              speed: f.speed
-            }
-          } else {
-            //从历史信息里找到这辆车的信息
-            if (historybusdata.length > 0) {
-              const historybusdata_this = historybusdata.filter(p => {if(typeof(p) != 'undefined'){
-                return p.name == bus_plate_hash[f.id].plate}}
-                )
-              if (historybusdata_this.length > 0) {
-                return historybusdata_this[0]
+              //哪条线路
+              let thisroute = 0
+              if (f.route_code == 202) {
+                thisroute = 1
               }
+              //判断是在哪个方向上
+              const mcp = turf.point([f.lng, f.lat])
+              let thisline = lines[thisroute]['features'][0]
+              //线上最近点
+              let p_nearest = turf.nearestPointOnLine(thisline, mcp)
+              let p_nearest_loc = p_nearest.properties.location
+              //线上最近点+1米处的点
+              const p_next = turf.along(thisline, p_nearest_loc + 0.0001);
+              //计算切线角度
+              let bearing = turf.rhumbBearing(p_nearest, p_next);
+              if (bearing < 0) {
+                bearing += 360
+              }
+              //通过车辆方向角判断车辆行进方向
+              let route_dir = 2
+              const angle = parseInt(f.course) - parseInt(bearing)
+              if ((angle < 20) && (angle > -20)) {
+                route_dir = 1
+                return {
+                  value: [route_dir + thisroute * 2, p_nearest_loc * 1000],
+                  name: bus_plate_hash[f.id].plate, itemStyle: {color: '#222'},
+                  symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
+                  symbolSize: 30,
+                  symbolRotate: 180,
+                  speed: f.speed
+                }
+              } else if ((angle < -160) || (angle > 160)) {
+                route_dir = 0
+                let dist = turf.length(thisline) * 1000 - p_nearest_loc * 1000
+                //如果是线路1的另一个方向，则重新计算距离
+                if (thisroute == 0) {
+                  thisline = lines[2]['features'][0]
+                  p_nearest = turf.nearestPointOnLine(thisline, mcp)
+                  p_nearest_loc = p_nearest.properties.location
+                  dist = turf.length(thisline) * 1000 - p_nearest_loc * 1000
+                }
+                return {
+                  value: [route_dir + thisroute * 2, dist],
+                  name: bus_plate_hash[f.id].plate, itemStyle: {color: '#222'},
+                  symbol: 'image://https://bus.sustcra.com/bus-top-view.png',
+                  symbolSize: 30,
+                  symbolRotate: 180,
+                  speed: f.speed
+                }
+              } else {
+                //从历史信息里找到这辆车的信息
+                if (historybusdata.length > 0) {
+                  const historybusdata_this = historybusdata.filter(p => {
+                        if (typeof (p) != 'undefined') {
+                          return p.name == bus_plate_hash[f.id].plate
+                        }
+                      }
+                  )
+                  if (historybusdata_this.length > 0) {
+                    return historybusdata_this[0]
+                  }
+                }
+
+              }
+
             }
-
-          }
-
-        }
         )
 
-        sethistorybusdata(busdata.filter(p=>typeof(p) != 'undefined'))
+        sethistorybusdata(busdata.filter(p => typeof (p) != 'undefined'))
         setEchartsOption({
-          series: [{}, {}, { data: busdata }]
+          series: [{}, {}, {data: busdata}]
         })
       })
     }
@@ -288,36 +315,36 @@ export default function App() {
       const newdata = historybusdata.map(f => {
         if (typeof (f) != 'undefined') {
           let routedir = 2
-          if(f.value[0]==1){
-            routedir=0
+          if (f.value[0] == 1) {
+            routedir = 0
           }
-          if(f.value[0]==2){
-            routedir=1
+          if (f.value[0] == 2) {
+            routedir = 1
           }
-          if(f.value[0]==3){
-            routedir=1
+          if (f.value[0] == 3) {
+            routedir = 1
           }
-          if(f.value[0]==0){
-            routedir=2
+          if (f.value[0] == 0) {
+            routedir = 2
           }
-          let next_dist=f.value[1] + f.speed * 0.5 * 1000 / 7200
-          if(next_dist>turf.length(lines[routedir]['features'][0]) * 1000 
-          ){
-            next_dist = turf.length(lines[routedir]['features'][0]) * 1000 
+          let next_dist = f.value[1] + f.speed * 0.5 * 1000 / 7200
+          if (next_dist > turf.length(lines[routedir]['features'][0]) * 1000
+          ) {
+            next_dist = turf.length(lines[routedir]['features'][0]) * 1000
           }
-          return { ...f, value: [f.value[0], next_dist] }
+          return {...f, value: [f.value[0], next_dist]}
         }
       })
-      sethistorybusdata(newdata.filter(p=>typeof(p) != 'undefined'))
+      sethistorybusdata(newdata.filter(p => typeof (p) != 'undefined'))
       setEchartsOption({
-      
-        series: [{}, {}, { data: newdata }]
+
+        series: [{}, {}, {data: newdata}]
       })
       //获取定位
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
           let lat = pos.coords.latitude,
-            lng = pos.coords.longitude;
+              lng = pos.coords.longitude;
           //标记出最近的站点
 
           const point = turf.point([lng, lat])
@@ -347,29 +374,29 @@ export default function App() {
           data1 = [
             {
               name: '最近' + bustext_1,
-              itemStyle: { color: '#ff881b' },
+              itemStyle: {color: '#ff881b'},
               coord: [1, line1_pos_dir1]
             },
             {
               name: '最近' + bustext_0,
-              itemStyle: { color: '#ff881b' },
+              itemStyle: {color: '#ff881b'},
               coord: [0, line1_pos_dir2]
             }]
 
           data2 = [{
             name: '最近' + bustext_3,
-            itemStyle: { color: '#379ff4' },
+            itemStyle: {color: '#379ff4'},
             coord: [3, line2_pos_dir1]
           },
-          {
-            name: '最近' + bustext_2,
-            itemStyle: { color: '#379ff4' },
-            coord: [2, line2_pos_dir2]
-          }
+            {
+              name: '最近' + bustext_2,
+              itemStyle: {color: '#379ff4'},
+              coord: [2, line2_pos_dir2]
+            }
           ]
 
           setEchartsOption({
-        
+
             series: [{
               markPoint: {
                 symbol: 'arrow',
@@ -379,7 +406,7 @@ export default function App() {
                 label: {
                   fontSize: 10,
                   show: true,
-                  color: '#444',
+                  color: '#666',
                   position: 'left', formatter: '{b}'
                 },
                 data: [
@@ -392,17 +419,18 @@ export default function App() {
         })
       }
     }
-  }, 500, { immediate: true });
+  }, 500, {immediate: true});
 
   return (
-    <div className='container'>
+      <div className='container'>
 
-      <ReactECharts
-        option={option}
-        ref={mycharts}
-        style={{ height: '744px', width: '100%' }}
-      />
-{/*        <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
+        <ReactECharts
+            option={option}
+            ref={mycharts}
+            style={{height: '744px', width: '100%'}}
+            theme={bg_theme}
+        />
+        {/*        <GitHubForkRibbon href="https://github.com/ni1o1/nikebus"
         target="_blank"
         color='orange'
         position="right-bottom">
@@ -411,7 +439,7 @@ export default function App() {
       <div >
       <img src="https://visitor-badge.laobi.icu/badge?page_id=nikebus" alt="visitor badge"/>
       </div>  */}
-    </div >
+      </div>
 
   )
 }
