@@ -345,11 +345,11 @@ export default function App() {
             lng = pos.coords.longitude;
           //标记出最近的站点
 
-          const point = point([lng, lat])
-          const nearest_line1 = nearestPoint(point, stops1);
+          const p = point([lng, lat])
+          const nearest_line1 = nearestPoint(p, stops1);
           const line1_pos_dir1 = nearestPointOnLine(lines[0]['features'][0], nearest_line1).properties.location * 1000
           const line1_pos_dir2 = length(lines[2]['features'][0]) * 1000 - nearestPointOnLine(lines[2]['features'][0], nearest_line1).properties.location * 1000
-          const nearest_line2 = nearestPoint(point, stops2);
+          const nearest_line2 = nearestPoint(p, stops2);
 
           const line2_pos_dir1 = nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000
           const line2_pos_dir2 = length(lines[1]['features'][0]) * 1000 - nearestPointOnLine(lines[1]['features'][0], nearest_line2).properties.location * 1000
