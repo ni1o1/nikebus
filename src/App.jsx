@@ -92,10 +92,10 @@ export default function App() {
         },
         axisLabel: {interval: 0},
         type: 'category',
-        data: ['1号线\n工学院方向',
-          '1号线\n欣园方向',
-          '2号线\n科研楼方向',
-          '2号线\n欣园方向'],
+        data: ['1号线\n工学院方向\nLine 1\nTo COE',
+          '1号线\n欣园方向\nLine 1\nTo Joy Highland',
+          '2号线\n科研楼方向\nLine 2\nTo Research Building',
+          '2号线\n欣园方向\nLine 2\nTo Joy Highland'],
         splitLine: {
           show: false
         }
@@ -364,32 +364,36 @@ export default function App() {
           const buspos_2 = historybusdata.filter(f => (f.value[0] == 2) && (f.value[1] <= line2_pos_dir2)).map(f => parseInt((line2_pos_dir2 - f.value[1]) / 250))
           //3
           const buspos_3 = historybusdata.filter(f => (f.value[0] == 3) && (f.value[1] <= line2_pos_dir1)).map(f => parseInt((line2_pos_dir1 - f.value[1]) / 250))
-          const bustext_0 = buspos_0.length > 0 ? '\n 约' + Math.min(...buspos_0) + '分钟' : ''
-          const bustext_1 = buspos_1.length > 0 ? '\n  约' + Math.min(...buspos_1) + '分钟' : ''
-          const bustext_2 = buspos_2.length > 0 ? '\n   约' + Math.min(...buspos_2) + '分钟' : ''
-          const bustext_3 = buspos_3.length > 0 ? '\n    约' + Math.min(...buspos_3) + '分钟' : ''
+          const bustext_0 = buspos_0.length > 0 ? '\n约' + Math.min(...buspos_0) + '分钟' : ''
+          const bustext_1 = buspos_1.length > 0 ? '\n约' + Math.min(...buspos_1) + '分钟' : ''
+          const bustext_2 = buspos_2.length > 0 ? '\n约' + Math.min(...buspos_2) + '分钟' : ''
+          const bustext_3 = buspos_3.length > 0 ? '\n约' + Math.min(...buspos_3) + '分钟' : ''
+          const bustext_0_eng = buspos_0.length > 0 ? '\nAbout ' + Math.min(...buspos_0) + ' minutes' : ''
+          const bustext_1_eng  = buspos_1.length > 0 ? '\nAbout ' + Math.min(...buspos_1) + ' minutes' : ''
+          const bustext_2_eng  = buspos_2.length > 0 ? '\nAbout ' + Math.min(...buspos_2) + ' minutes' : ''
+          const bustext_3_eng  = buspos_3.length > 0 ? '\nAbout ' + Math.min(...buspos_3) + ' minutes' : ''
           let data1 = [];
           let data2 = [];
 
           data1 = [
             {
-              name: '最近' + bustext_1,
+              name: '最近' + bustext_1 +'\nNearest' + bustext_1_eng,
               itemStyle: {color: '#ff881b'},
               coord: [1, line1_pos_dir1]
             },
             {
-              name: '最近' + bustext_0,
+              name: '最近' + bustext_0+'\nNearest' + bustext_0_eng,
               itemStyle: {color: '#ff881b'},
               coord: [0, line1_pos_dir2]
             }]
 
           data2 = [{
-            name: '最近' + bustext_3,
+            name: '最近' + bustext_3+'\nNearest' + bustext_3_eng,
             itemStyle: {color: '#379ff4'},
             coord: [3, line2_pos_dir1]
           },
             {
-              name: '最近' + bustext_2,
+              name: '最近' + bustext_2+'\nNearest' + bustext_2_eng,
               itemStyle: {color: '#379ff4'},
               coord: [2, line2_pos_dir2]
             }
