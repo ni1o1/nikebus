@@ -6,7 +6,7 @@
 
 ## 原理
 
-接入实时公交GPS，将车辆位置与公交线进行GIS空间匹配，并用ECharts的折线图、散点图进行绘制与标注
+接入实时公交GPS，将车辆位置与公交线进行GIS空间匹配，并用ECharts的折线图、散点图进行绘制与标注。[bili视频讲解](https://www.bilibili.com/video/BV1JT411L72G)
 
 ## 用什么做的？
 
